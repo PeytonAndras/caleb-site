@@ -99,6 +99,97 @@
       transition: opacity 0.2s;
     }
     #expert-toggle:hover { opacity: 1; }
+
+    /* Content Sections */
+    .content-section {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      z-index: 10;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      overflow-y: auto;
+    }
+
+    .section-container {
+      max-width: 800px;
+      width: 90%;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(5px);
+      border-radius: 10px;
+      padding: 2rem;
+      margin: 2rem 0;
+      color: white;
+      position: relative;
+    }
+
+    .section-container h2 {
+      margin-top: 0;
+      font-size: 2rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .section-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .content-item {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1.2rem;
+      border-radius: 8px;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .content-item:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .content-item h3 {
+      margin-top: 0;
+      font-size: 1.3rem;
+    }
+
+    .content-link {
+      display: inline-block;
+      margin-top: 0.8rem;
+      color: white;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .content-link:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .close-section {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .close-section:hover {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
@@ -179,6 +270,120 @@
       expertState.textContent = expert ? 'on' : 'off';
       document.body.style.animationDuration = expert ? '4s' : '12s';
     });
+
+    // Section navigation
+    document.querySelectorAll('.nav-item').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').substring(1);
+        const targetSection = document.getElementById(targetId);
+        
+        // Hide all sections first
+        document.querySelectorAll('.content-section').forEach(section => {
+          section.style.display = 'none';
+        });
+        
+        // Show the target section
+        if (targetSection) {
+          targetSection.style.display = 'flex';
+          
+          // Add close button if not already there
+          if (!targetSection.querySelector('.close-section')) {
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'close-section';
+            closeBtn.innerHTML = '×';
+            closeBtn.addEventListener('click', () => {
+              targetSection.style.display = 'none';
+            });
+            targetSection.querySelector('.section-container').appendChild(closeBtn);
+          }
+        }
+      });
+    });
+
+    // Close section when clicking Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.content-section').forEach(section => {
+          section.style.display = 'none';
+        });
+      }
+    });
   </script>
+  
+  <!-- Content sections -->
+  <section id="songs" class="content-section">
+    <div class="section-container">
+      <h2>Songs</h2>
+      <div class="section-content">
+        <!-- Add song items here -->
+        <div class="content-item">
+          <h3>Song Title 1</h3>
+          <p>Description of the song</p>
+          <a href="#" class="content-link">Listen</a>
+        </div>
+        <div class="content-item">
+          <h3>Song Title 2</h3>
+          <p>Description of the song</p>
+          <a href="#" class="content-link">Listen</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="videos" class="content-section">
+    <div class="section-container">
+      <h2>Videos</h2>
+      <div class="section-content">
+        <!-- Add video items here -->
+        <div class="content-item">
+          <h3>Video Title 1</h3>
+          <p>Description of the video</p>
+          <a href="#" class="content-link">Watch</a>
+        </div>
+        <div class="content-item">
+          <h3>Video Title 2</h3>
+          <p>Description of the video</p>
+          <a href="#" class="content-link">Watch</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="notes" class="content-section">
+    <div class="section-container">
+      <h2>Notes</h2>
+      <div class="section-content">
+        <!-- Add note items here -->
+        <div class="content-item">
+          <h3>Note Title 1</h3>
+          <p>Content of the note</p>
+        </div>
+        <div class="content-item">
+          <h3>Note Title 2</h3>
+          <p>Content of the note</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="stuff" class="content-section">
+    <div class="section-container">
+      <h2>Stuff</h2>
+      <div class="section-content">
+        <!-- Add misc items here -->
+        <div class="content-item">
+          <h3>Item 1</h3>
+          <p>Description</p>
+          <a href="#" class="content-link">Link</a>
+        </div>
+        <div class="content-item">
+          <h3>Item 2</h3>
+          <p>Description</p>
+          <a href="#" class="content-link">Link</a>
+        </div>
+      </div>
+    </div>
+  </section>
 </body>
 </html>
