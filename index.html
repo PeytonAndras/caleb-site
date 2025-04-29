@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Awesome Wurtz‑Style Site</title>
+  <!--
+    ┌───────────────────────────────────────────────┐
+    │  🎨  QUICK‑START CUSTOMIZATION GUIDE         │
+    ├───────────────────────────────────────────────┤
+    │  1. Edit the arrays (navItems, phrases,       │
+    │     gradientColors, musicTracks) below.       │
+    │  2. Drop any audio files into the /audio      │
+    │     folder and reference them in musicTracks. │
+    │  3. Tweak font sizes, spacing, etc. in the    │
+    │     :root section of the CSS.                 │
+    │  4. No build step needed — just open index.   │
+    └───────────────────────────────────────────────┘
+  -->
+  <style>
+    :root {
+      --font-main: "Inter", sans-serif;
+      --nav-gap: 1.2rem;
+      --nav-size: clamp(1rem, 2vw + 1rem, 2.2rem);
+      --note-size: clamp(0.9rem, 1.4vw + 0.9rem, 1.6rem);
+    }
+
+    /* 🔮 Animated gradient background */
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: var(--font-main);
+      background: linear-gradient(45deg, #ff00c8, #00eaff, #7aff00, #ff9900);
+      background-size: 400% 400%;
+      animation: gradientShift 12s ease infinite;
+      overflow: hidden;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* 🎹 Center navigation */
+    nav {
+      display: flex;
+      gap: var(--nav-gap);
+      flex-wrap: wrap;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .nav-item {
+      font-size: var(--nav-size);
+      padding: 0.35em 0.6em;
+      border-radius: 0.4em;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      text-decoration: none;
+      transition: transform 0.2s ease, background 0.2s ease;
+      backdrop-filter: blur(4px);
+    }
+    .nav-item:hover {
+      transform: translateY(-4px) scale(1.08) rotate(-2deg);
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* 📝 Floating notes */
+    .note {
+      position: absolute;
+      white-space: nowrap;
+      font-size: var(--note-size);
+      font-weight: 600;
+      pointer-events: none;
+      color: #ffffff;
+      text-shadow: 0 0 6px rgba(0,0,0,0.55);
+      animation: floatUp 10s linear forwards;
+    }
+    @keyframes floatUp {
+      0% { transform: translate(-50%, 100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translate(-50%, -20vh) rotate(3deg); opacity: 0; }
+    }
+
+    /* 🎛️ Expert mode (optional) */
+    #expert-toggle {
+      position: fixed;
+      bottom: 18px;
+      right: 22px;
+      font-size: 0.9rem;
+      color: #fff;
+      cursor: pointer;
+      user-select: none;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    #expert-toggle:hover { opacity: 1; }
+  </style>
+</head>
+<body>
+  <nav id="nav"></nav>
+  <div id="expert-toggle">expert mode: <span id="expert-state">off</span></div>
+
+  <audio id="bg-audio" preload="auto"></audio>
+
+  <script>
+    /* ------- 🎛 Site Configuration ------- */
+    const navItems = [
+      { label: "songs", href: "#songs" },
+      { label: "videos", href: "#videos" },
+      { label: "notes", href: "#notes" },
+      { label: "stuff", href: "#stuff" },
+    ];
+
+    const phrases = [
+      "hello there!",
+      "cool website, huh?",
+      "customize me in /index.html",
+      "🎺 doo doo doo",
+      "bill wurtz vibes",
+      "coding is fun!",
+      "🌈 rainbow powers"
+    ];
+
+    const gradientColors = [
+      "#ff00c8",
+      "#00eaff",
+      "#7aff00",
+      "#ff9900"
+    ];
+
+    const musicTracks = [
+      "audio/track1.mp3",
+      "audio/track2.mp3"
+    ];
+
+    /* -------- 🚀 Implementation -------- */
+    const navContainer = document.getElementById("nav");
+    navItems.forEach(item => {
+      const a = document.createElement("a");
+      a.className = "nav-item";
+      a.href = item.href;
+      a.textContent = item.label;
+      navContainer.appendChild(a);
+    });
+
+    // 🎹 Random track loader
+    const audio = document.getElementById("bg-audio");
+    if (musicTracks.length) {
+      audio.src = musicTracks[Math.floor(Math.random()*musicTracks.length)];
+      audio.loop = true;
+      audio.volume = 0.5;
+      window.addEventListener('click', () => audio.play(), { once: true }); // play on first interaction
+    }
+
+    // 📝 Spawn notes periodically
+    function spawnNote() {
+      const note = document.createElement("div");
+      note.className = "note";
+      note.textContent = phrases[Math.floor(Math.random()*phrases.length)];
+      note.style.left = Math.random() * 100 + "vw";
+      note.style.transform = `translate(-50%, ${window.innerHeight}px)`;
+      note.style.color = gradientColors[Math.floor(Math.random()*gradientColors.length)];
+      document.body.appendChild(note);
+      setTimeout(() => note.remove(), 10000);
+    }
+    setInterval(spawnNote, 2800);
+
+    // 🎛 Expert mode (toggles faster notes & psychedelic gradient)
+    const expertToggle = document.getElementById("expert-toggle");
+    const expertState = document.getElementById("expert-state");
+    let expert = false;
+    expertToggle.addEventListener('click', () => {
+      expert = !expert;
+      expertState.textContent = expert ? 'on' : 'off';
+      document.body.style.animationDuration = expert ? '4s' : '12s';
+    });
+  </script>
+</body>
+</html>
