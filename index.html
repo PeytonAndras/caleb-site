@@ -86,19 +86,7 @@
       100% { transform: translate(-50%, -20vh) rotate(3deg); opacity: 0; }
     }
 
-    /* 🎛️ Expert mode (optional) */
-    #expert-toggle {
-      position: fixed;
-      bottom: 18px;
-      right: 22px;
-      font-size: 0.9rem;
-      color: #fff;
-      cursor: pointer;
-      user-select: none;
-      opacity: 0.7;
-      transition: opacity 0.2s;
-    }
-    #expert-toggle:hover { opacity: 1; }
+  /* (Expert mode removed) */
 
     /* Content Sections */
     .content-section {
@@ -194,7 +182,7 @@
 </head>
 <body>
   <nav id="nav"></nav>
-  <div id="expert-toggle">expert mode: <span id="expert-state">off</span></div>
+  <!-- Expert mode removed -->
 
   <audio id="bg-audio" preload="auto"></audio>
 
@@ -261,15 +249,7 @@
     }
     setInterval(spawnNote, 2800);
 
-    // 🎛 Expert mode (toggles faster notes & psychedelic gradient)
-    const expertToggle = document.getElementById("expert-toggle");
-    const expertState = document.getElementById("expert-state");
-    let expert = false;
-    expertToggle.addEventListener('click', () => {
-      expert = !expert;
-      expertState.textContent = expert ? 'on' : 'off';
-      document.body.style.animationDuration = expert ? '4s' : '12s';
-    });
+  // Expert mode logic removed (background animation constant at 12s)
 
     // Section navigation
     document.querySelectorAll('.nav-item').forEach(link => {
