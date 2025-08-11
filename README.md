@@ -23,21 +23,6 @@ Workflow:
 4. Commit changes ("Commit directly to main" is fine).
 5. Refresh the live site and open that section. (Hard refresh with Cmd+Shift+R if old data shows.)
 
-## ➕ Adding a New Section
-1. Create `content/newsection.json` with an empty array `[]` or starter items.
-2. In `index.html`, add to `navItems` array:
-```js
-{ label: "newsection", href: "#newsection" }
-```
-3. Duplicate one of the existing `<section>` blocks at the bottom:
-```html
-<section id="newsection" class="content-section">
-  <div class="section-container">
-    <h2>Newsection</h2>
-    <div class="section-content" data-section="newsection"></div>
-  </div>
-</section>
-```
 4. Save & commit. Visiting the new nav button loads JSON automatically.
 
 ## 🎵 Background Audio
