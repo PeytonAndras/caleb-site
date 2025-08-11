@@ -1,0 +1,4 @@
+[
+  { "title": "Item 1", "desc": "Description", "link": "#", "label": "Link" },
+  { "title": "Item 2", "desc": "Another description", "link": "#", "label": "Link" }
+]

@@ -309,80 +309,79 @@
         });
       }
     });
+
+    // 📦 Lazy load section JSON content
+    async function loadSectionData(name) {
+      const container = document.querySelector(`.section-content[data-section="${name}"]`);
+      if (!container || container.dataset.loaded) return; // already loaded
+      try {
+        const res = await fetch(`content/${name}.json?cb=${Date.now()}`); // cache bust while editing
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const items = await res.json();
+        container.innerHTML = items.map(item => {
+          const safeTitle = item.title || 'Untitled';
+            const desc = item.desc ? `<p>${item.desc}</p>` : '';
+            const link = item.link ? `<a href="${item.link}" class="content-link" target="_blank" rel="noopener">${item.label || 'Open'}</a>` : '';
+            return `<div class="content-item">\n              <h3>${safeTitle}</h3>\n              ${desc}\n              ${link}\n            </div>`;
+        }).join('');
+        container.dataset.loaded = 'true';
+      } catch (err) {
+        container.innerHTML = `<div style="color:#ffb3b3">Failed to load content (${err.message})</div>`;
+      }
+    }
+
+    // When showing a section, trigger its load
+    function showSection(id) {
+      document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+      const section = document.getElementById(id);
+      if (!section) return;
+      section.style.display = 'flex';
+      loadSectionData(id);
+      if (!section.querySelector('.close-section')) {
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'close-section';
+        closeBtn.innerHTML = '×';
+        closeBtn.addEventListener('click', () => section.style.display = 'none');
+        section.querySelector('.section-container').appendChild(closeBtn);
+      }
+    }
+
+    // Replace previous nav click logic to also load JSON
+    document.querySelectorAll('.nav-item').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').substring(1);
+        showSection(targetId);
+      });
+    });
   </script>
   
   <!-- Content sections -->
   <section id="songs" class="content-section">
     <div class="section-container">
       <h2>Songs</h2>
-      <div class="section-content">
-        <!-- Add song items here -->
-        <div class="content-item">
-          <h3>Song Title 1</h3>
-          <p>Description of the song</p>
-          <a href="#" class="content-link">Listen</a>
-        </div>
-        <div class="content-item">
-          <h3>Song Title 2</h3>
-          <p>Description of the song</p>
-          <a href="#" class="content-link">Listen</a>
-        </div>
-      </div>
+  <div class="section-content" data-section="songs"></div>
     </div>
   </section>
 
   <section id="videos" class="content-section">
     <div class="section-container">
       <h2>Videos</h2>
-      <div class="section-content">
-        <!-- Add video items here -->
-        <div class="content-item">
-          <h3>Video Title 1</h3>
-          <p>Description of the video</p>
-          <a href="#" class="content-link">Watch</a>
-        </div>
-        <div class="content-item">
-          <h3>Video Title 2</h3>
-          <p>Description of the video</p>
-          <a href="#" class="content-link">Watch</a>
-        </div>
-      </div>
+  <div class="section-content" data-section="videos"></div>
     </div>
   </section>
 
   <section id="notes" class="content-section">
     <div class="section-container">
       <h2>Notes</h2>
-      <div class="section-content">
-        <!-- Add note items here -->
-        <div class="content-item">
-          <h3>Note Title 1</h3>
-          <p>Content of the note</p>
-        </div>
-        <div class="content-item">
-          <h3>Note Title 2</h3>
-          <p>Content of the note</p>
-        </div>
-      </div>
+  <div class="section-content" data-section="notes"></div>
     </div>
   </section>
 
   <section id="stuff" class="content-section">
     <div class="section-container">
       <h2>Stuff</h2>
-      <div class="section-content">
-        <!-- Add misc items here -->
-        <div class="content-item">
-          <h3>Item 1</h3>
-          <p>Description</p>
-          <a href="#" class="content-link">Link</a>
-        </div>
-        <div class="content-item">
-          <h3>Item 2</h3>
-          <p>Description</p>
-          <a href="#" class="content-link">Link</a>
-        </div>
-      </div>
+  <div class="section-content" data-section="stuff"></div>
     </div>
   </section>
 </body>
