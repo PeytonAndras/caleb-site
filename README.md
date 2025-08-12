@@ -23,6 +23,52 @@ Workflow:
 4. Commit changes ("Commit directly to main" is fine).
 5. Refresh the live site and open that section. (Hard refresh with Cmd+Shift+R if old data shows.)
 
+### Notes Subcategories
+`notes.json` supports two formats:
+
+1. Flat list (legacy):
+```json
+[
+  { "title": "Note 1", "desc": "..." },
+  { "title": "Note 2", "desc": "..." }
+]
+```
+2. Grouped by category (preferred):
+```json
+[
+  {
+    "category": "Ideas",
+    "notes": [
+      { "title": "Brainstorm", "desc": "riff on melody" }
+    ]
+  },
+  {
+    "category": "Quotes",
+    "notes": [
+      { "title": "Inspiration", "desc": "\"Music is...\"" }
+    ]
+  }
+]
+```
+Rules:
+- If the first element has a `category` key the loader treats the file as grouped.
+- Each category object: `category` (string) + `notes` (array of note objects).
+- Note objects accept the same fields as other items: `title`, optional `desc`, optional `link`, optional `label`.
+- Empty `notes` arrays are allowed (will just show the heading).
+
+Add a new category:
+```json
+{
+  "category": "Reminders",
+  "notes": [
+    { "title": "Email John", "desc": "about collab" }
+  ]
+}
+```
+Place it inside the top-level array (remember commas between siblings).
+
+You can still switch back to the flat array anytime; the script auto-detects.
+
 4. Save & commit. Visiting the new nav button loads JSON automatically.
 
 ## 🎵 Background Audio
