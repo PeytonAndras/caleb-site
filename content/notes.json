@@ -1,13 +1,13 @@
 [
   {
-    "category": "Ideas",
+    "category": "General",
     "notes": [
       { "title": "Note 1", "desc": "type your thoughts here" },
       { "title": "Note 2", "desc": "type your thoughts here" }
     ]
   },
   {
-    "category": "Reminders",
+    "category": "Highschool",
     "notes": [
       { "title": "Todo 1", "desc": "describe task" },
       { "title": "Todo 2", "desc": "describe task" }
