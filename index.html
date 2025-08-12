@@ -299,12 +299,29 @@
         const res = await fetch(`content/${name}.json?cb=${Date.now()}`); // cache bust while editing
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const items = await res.json();
-        container.innerHTML = items.map(item => {
-          const safeTitle = item.title || 'Untitled';
+        // Detect notes subcategory structure (array of {category, notes:[]})
+        if (name === 'notes' && Array.isArray(items) && items[0] && items[0].category) {
+          container.innerHTML = items.map(cat => {
+            const heading = `<div style="grid-column:1 / -1; margin:0.3rem 0 0.2rem;">
+  <h3 style="margin:0 0 0.4rem; font-size:1.05rem; letter-spacing:0.5px; text-transform:uppercase; opacity:0.85; border-bottom:1px solid rgba(255,255,255,0.25); padding-bottom:2px;">${cat.category}</h3>
+</div>`;
+            const notesHtml = (cat.notes || []).map(note => {
+              const safeTitle = note.title || 'Untitled';
+              const desc = note.desc ? `<p>${note.desc}</p>` : '';
+              const link = note.link ? `<a href="${note.link}" class="content-link" target="_blank" rel="noopener">${note.label || 'Open'}</a>` : '';
+              return `<div class="content-item">\n  <h3>${safeTitle}</h3>\n  ${desc}\n  ${link}\n</div>`;
+            }).join('');
+            return heading + notesHtml;
+          }).join('');
+        } else {
+          // Flat list rendering (all other sections + legacy notes format)
+          container.innerHTML = items.map(item => {
+            const safeTitle = item.title || 'Untitled';
             const desc = item.desc ? `<p>${item.desc}</p>` : '';
             const link = item.link ? `<a href="${item.link}" class="content-link" target="_blank" rel="noopener">${item.label || 'Open'}</a>` : '';
-            return `<div class="content-item">\n              <h3>${safeTitle}</h3>\n              ${desc}\n              ${link}\n            </div>`;
-        }).join('');
+            return `<div class="content-item">\n  <h3>${safeTitle}</h3>\n  ${desc}\n  ${link}\n</div>`;
+          }).join('');
+        }
         container.dataset.loaded = 'true';
       } catch (err) {
         container.innerHTML = `<div style="color:#ffb3b3">Failed to load content (${err.message})</div>`;
